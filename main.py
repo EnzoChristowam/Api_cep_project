@@ -23,15 +23,6 @@ class Adress(BaseModel):
         if len(cep)!=8 or not cep.isdigit():
             raise ValueError("cep must have eight numbers")
         return cep
-    
-    def __init__(self, cep, state, city, neighborhood, street, service, location):
-           self.cep = cep
-           self.state = state
-           self.city = city
-           self.neighborhood = neighborhood
-           self.street = street
-           self.service = service
-           self.location = location
 
 
 #método para retornar o endereço
@@ -46,10 +37,10 @@ def return_adress(adress:Adress) -> dict:
 #método para conseguir realizar a requisição e devolvendo a mensagem correspondente conforme o erro que pode ser gerado
 async def request_adress(cep:str):
      
-    url = f'https://brasilapi.com.br/api/cep/v2/89220333'
+    url = f'https://brasilapi.com.br/api/cep/v2/{cep}'
 
     try:
-        async with httpx.AsyncClient as client:
+        async with httpx.AsyncClient() as client:
             resp = await client.get(url, timeout=10.0)
 
             return resp
@@ -75,21 +66,21 @@ async def get_cep_and_response(cep:str):
 
     #Recebendo a informação e validando a questão de algum erro
     #tratando o erro
-    if resp_api != 200:
+    if resp_api.status_code != 200:
 
-        if resp_api == 400:
+        if resp_api.status_code == 400:
                         return { 
                             "name": "BadRequestError",
                             "message": "CEP deve conter exatamente 8 dígitos",
                             "type": "validation_error"
                 }
-        elif resp_api == 404:
+        elif resp_api.status_code == 404:
                         return {                  
                             "name": "NotFoundError",
                             "message": "CEP NAO ENCONTRADO",
                             "type": "service_error"
                       }
-        elif resp_api == 500:
+        elif resp_api.status_code == 500:
                         return {           
                             "name": "InternalError",
                             "message": "Erro interno no serviço de CEP",
@@ -99,10 +90,11 @@ async def get_cep_and_response(cep:str):
                       raise HTTPException(status_code=503, detail="Serviço indisponível no momento")   
 
     #Habilitar a resposta para a classe Adress
-    adress = Adress(**resp_api)
+    data = resp_api.json()
+    adress = Adress(**data)
 
     #ETAPA FINAL
     #No caso da resposta da apí estar correta, retornar as informações pedidas
-    return_adress(adress)
+    return return_adress(adress)
 
      
