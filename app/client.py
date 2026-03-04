@@ -2,6 +2,7 @@ from fastapi import HTTPException
 import httpx
 import certifi
 import ssl
+from app.model import Adress
 
 async def request_api(cep:str):
      
