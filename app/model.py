@@ -1,5 +1,4 @@
-from pydantic import BaseModel, field_validator
-from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 
 class Location(BaseModel):
     type:str

@@ -6,7 +6,7 @@ from app.service import response_adress
 router = APIRouter()
 
 @router.get("/cep/v1/{cep}",
-            response_class=JSONResponse,
+            response_model=CEPResponse,
             responses={
                 400: {"model": ErrorResponse, "description": "CEP inválido"},
                 404: {"model": ErrorResponse, "description": "CEP não encontrado"},

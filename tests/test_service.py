@@ -15,7 +15,7 @@ import httpx
 async def test_format_response():
     cep = "06053020"
     expected_response = {
-        "Endereço":"Avenida José Lourenço, Jaguaribe, Osasco/SP"
+        "endereco":"Avenida José Lourenço, Jaguaribe, Osasco/SP"
     }
 
     response = await response_adress(cep)
