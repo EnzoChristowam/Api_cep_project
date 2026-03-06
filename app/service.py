@@ -11,7 +11,6 @@ def formatted_adress(adress:Adress) -> CEPResponse:
 
 async def response_adress(cep:str) -> CEPResponse:
 
-    #Mandando o cep para o método de request_adress e recebendo a resposta.
     adress = await request_api(cep)
 
     return formatted_adress(adress)

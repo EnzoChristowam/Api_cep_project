@@ -32,7 +32,7 @@ async def test_formatted_adress_response_api_client():
     )
 
 
-    adress_api = await request_api("06053020")
+    adress_api = await request_api("06053-020")
 
     assert adress_api.cep == "06053020"
     assert adress_api.state == "SP"
