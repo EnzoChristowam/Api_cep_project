@@ -146,8 +146,50 @@ async def test_formatted_adress_error_503():
 
 
 
+@respx.mock
+@pytest.mark.asyncio
+async def test_formatted_adress_error_Timeout():
+    #criando u mock de retorno da rota acionada
+    respx.get("https://brasilapi.com.br/api/cep/v2/01010101").mock(
+        side_effect=httpx.TimeoutException("Erro interno")
+    )
+
+    with pytest.raises(HTTPException) as exc_info:
+        await request_api("01010101")
+
+    assert exc_info.value.status_code == 500
+
+    assert "Erro interno" in exc_info.value.detail
 
 
 
-    
+@respx.mock
+@pytest.mark.asyncio
+async def test_formatted_adress_error_Timeout():
+    #criando u mock de retorno da rota acionada
+    respx.get("https://brasilapi.com.br/api/cep/v2/01010102").mock(
+        side_effect=httpx.RequestError("Erro interno")
+    )
 
+    with pytest.raises(HTTPException) as exc_info:
+        await request_api("01010102")
+
+    assert exc_info.value.status_code == 500
+
+    assert "Erro interno" in exc_info.value.detail
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_formatted_adress_error_Timeout():
+    #criando u mock de retorno da rota acionada
+    respx.get("https://brasilapi.com.br/api/cep/v2/01010103").mock(
+        side_effect=httpx.ConnectError("Erro interno")
+    )
+
+    with pytest.raises(HTTPException) as exc_info:
+        await request_api("01010103")
+
+    assert exc_info.value.status_code == 500
+
+    assert "Erro interno" in exc_info.value.detail

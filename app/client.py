@@ -3,8 +3,10 @@ import httpx
 from app.model import Adress, ErrorResponse
 
 async def request_api(cep:str):
+
+    cep_cleaned = cep.replace("-","") if "-" in cep else cep
      
-    url = f'https://brasilapi.com.br/api/cep/v2/{cep}'
+    url = f'https://brasilapi.com.br/api/cep/v2/{cep_cleaned}'
 
     try:
         async with httpx.AsyncClient(verify=False) as client:
